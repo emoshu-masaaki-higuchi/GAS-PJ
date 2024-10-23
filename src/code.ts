@@ -28,6 +28,19 @@ interface GoogleBooksAPIResponse {
     items?: GoogleBooksItem[];
 }
 
+
+/**
+ * Google Books APIと書籍管理APIを使用して、書籍情報を取得し、スプレッドシートに書き込む関数。
+ *
+ * - 指定したスプレッドシートのシートに、書籍管理APIから取得した書籍情報をGoogle Books APIを通じて拡張し、
+ *   タイトルやジャンル情報をスプレッドシートに反映する。
+ *
+ * @throws {Error} - 指定されたスプレッドシートが見つからない場合、またはAPIから不正なレスポンスを受け取った場合にエラーをスローする。
+ * @example
+ * fetchBooks();
+ *
+ * // スプレッドシート「書籍 -- 試験用」に書籍情報をセット
+ */
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const fetchBooks = (): void => {
 
