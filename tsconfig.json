@@ -7,5 +7,12 @@
     "lib": ["es2015"]
   },
   "include": ["src/**/*.ts"],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules"],
+  "lint-staged": {
+    "*.ts": [
+      "eslint --fix", // ESLintでの自動修正
+      "tsc --noEmit", // TypeScriptの型チェック（ファイルの出力なし）
+      "git add" // 修正後に自動でファイルをステージング
+    ]
+  }
 }
