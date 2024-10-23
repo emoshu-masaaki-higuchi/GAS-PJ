@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "target": "ES5",
+    "module": "none",
+    "outDir": "dist",
+    "rootDir": "src",
+    "lib": ["es2015"]
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules"]
+}
