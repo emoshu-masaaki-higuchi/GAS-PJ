@@ -125,16 +125,16 @@ src/*.js
 package-lock.json
 ```
 
-その他のコマンド
-• npm run build: TypeScript を JavaScript にコンパイル
-• npm run watch: ファイルを保存するたびに自動コンパイル
-• clasp push: Google Apps Script にデプロイ
-• clasp pull: Google Apps Script からローカルにスクリプトをダウンロード
-
-注意点
-• clasp login でログインする際は、Google Apps Script にアクセス可能なアカウントを使用してください。
-• clasp push 時に複数のファイルがデプロイされる場合、.claspignore を適切に設定して、不要なファイルを無視するようにしてください。
-. claspをpushした時めちゃくちゃ時間かかる時はclasp.jsonの設定を変更
+その他のコマンド<br>
+• npm run build: TypeScript を JavaScript にコンパイル<br>
+• npm run watch: ファイルを保存するたびに自動コンパイル<br>
+• clasp push: Google Apps Script にデプロイ<br>
+• clasp pull: Google Apps Script からローカルにスクリプトをダウンロード<br>
+<br>
+注意点<br>
+• clasp login でログインする際は、Google Apps Script にアクセス可能なアカウントを使用してください。<br>
+• clasp push 時に複数のファイルがデプロイされる場合、.claspignore を適切に設定して、不要なファイルを無視するようにしてください。<br>
+. claspをpushした時めちゃくちゃ時間かかる時はclasp.jsonの設定を変更<br>
 ```json
 {
   "scriptId": "your-script-id",
