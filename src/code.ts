@@ -1,33 +1,5 @@
-/**
- * 書籍情報の型定義
- */
-interface Book {
-    book_id: number;
-    isbn: string;
-    storage_location: string;
-    label_type: string;
-    label_spec: string;
-    attachment_location_spec: string;
-    notes: string;
-}
-
-/**
- * Google Books APIのレスポンス型定義
- */
-interface GoogleBooksVolumeInfo {
-    title: string;
-    categories?: string[];
-}
-
-interface GoogleBooksItem {
-    volumeInfo: GoogleBooksVolumeInfo;
-}
-
-interface GoogleBooksAPIResponse {
-    totalItems: number;
-    items?: GoogleBooksItem[];
-}
-
+// 型定義をインポート
+import {Book, GoogleBooksAPIResponse} from './types';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const fetchBooks = (): void => {
 
