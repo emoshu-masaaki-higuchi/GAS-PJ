@@ -134,3 +134,12 @@ package-lock.json
 注意点
 • clasp login でログインする際は、Google Apps Script にアクセス可能なアカウントを使用してください。
 • clasp push 時に複数のファイルがデプロイされる場合、.claspignore を適切に設定して、不要なファイルを無視するようにしてください。
+. claspをpushした時めちゃくちゃ時間かかる時はclasp.jsonの設定を変更
+```json
+{
+  "scriptId": "your-script-id",
+  "rootDir": "dist"
+}
+```
+
+
