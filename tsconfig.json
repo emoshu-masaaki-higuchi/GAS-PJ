@@ -1,18 +1,27 @@
 {
   "compilerOptions": {
-    "target": "ES5",
-    "module": "none",
+    "target": "es2017",
+    "module": "commonjs", // 必要に応じて他のオプションも設定
     "outDir": "dist",
     "rootDir": "src",
-    "lib": ["es2015"]
+    "lib": [
+      "es2017"
+    ]
   },
-  "include": ["src/**/*.ts"],
-  "exclude": ["node_modules"],
+  "include": [
+    "src/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ],
   "lint-staged": {
     "*.ts": [
-      "eslint --fix", // ESLintでの自動修正
-      "tsc --noEmit", // TypeScriptの型チェック（ファイルの出力なし）
-      "git add" // 修正後に自動でファイルをステージング
+      "eslint --fix",
+      // ESLintでの自動修正
+      "tsc --noEmit",
+      // TypeScriptの型チェック（ファイルの出力なし）
+      "git add"
+      // 修正後に自動でファイルをステージング
     ]
   }
 }
