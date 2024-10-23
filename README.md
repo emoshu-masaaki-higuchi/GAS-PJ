@@ -143,3 +143,8 @@ package-lock.json
 ```
 
 
+ENOENT: no such file or directory, open 'dist/appsscript.json'が発生した時<br>
+appsscript.json ファイルがプロジェクトルートにある場合、dist ディレクトリにコピーしてみてください。
+```bash
+cp appsscript.json dist/
+```
