@@ -13,5 +13,11 @@
     "build": "tsc",
     "watch": "tsc --watch",
     "prepare": "husky install"
+  },
+  "lint-staged": {
+    "*.js": [
+      "eslint --fix",
+      "git add"
+    ]
   }
 }
