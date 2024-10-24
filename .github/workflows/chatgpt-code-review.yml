@@ -3,47 +3,47 @@ name: ChatGPT Code Review on Push
 on:
   push:
     branches:
-      - main  # 'main' ブランチにプッシュされた時のみトリガーされます
+      - main # 'main' ブランチにプッシュされた時のみトリガーされます
 
 jobs:
   review:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: コードをチェックアウト
         uses: actions/checkout@v3
         with:
-          fetch-depth: 0  # 完全な履歴を取得
+          fetch-depth: 0 # コミット履歴を完全に取得
 
-      - name: Set up Node.js
+      - name: Node.js のセットアップ
         uses: actions/setup-node@v3
         with:
-          node-version: '16'
+          node-version: "16"
 
-      - name: Send code to ChatGPT API
+      - name: ChatGPT API にコードを送信
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
-          # Install dependencies
+          # 依存関係をインストール
           npm install axios
 
-          # Fetch full history in case it's not available
+          # 履歴がない場合に備えて、全履歴を取得
           git fetch --all
-          
-          # Extract the code that was pushed and format it
+
+          # プッシュされたコードの差分を取得し、整形
           PR_CODE=$(git diff HEAD^ HEAD)  # 最新のコミット差分を取得
-          
-          # Debugging: Check if code diff is correctly obtained
-          echo "Code diff:"
+
+          # デバッグ: 差分が正しく取得されたかを確認
+          echo "コードの差分:"
           echo "$PR_CODE"
-          
-          # Check if PR_CODE is empty or not
+
+          # 差分が空かどうかを確認
           if [ -z "$PR_CODE" ]; then
-            echo "No code changes detected."
+            echo "コードの変更が検出されませんでした。"
             exit 0
           fi
-          
-          # Create the request payload with Japanese message
+
+          # 日本語のメッセージでリクエストペイロードを作成
           REQUEST_PAYLOAD=$(cat <<EOF
           {
             "model": "gpt-4",
@@ -55,21 +55,21 @@ jobs:
           EOF
           )
 
-          # Debugging: Check the request payload
-          echo "Request payload:"
+          # デバッグ: リクエストペイロードを確認
+          echo "リクエストペイロード:"
           echo "$REQUEST_PAYLOAD"
-          
-          # Send the request to ChatGPT API and capture response
+
+          # ChatGPT API にリクエストを送信し、レスポンスをキャプチャ
           RESPONSE_CODE=$(curl -s -o response.json -w "%{http_code}" -X POST https://api.openai.com/v1/chat/completions \
             -H "Content-Type: application/json" \
             -H "Authorization: Bearer $OPENAI_API_KEY" \
             -d "$REQUEST_PAYLOAD")
 
-          # Output the response code and content
-          echo "Response code: $RESPONSE_CODE"
+          # レスポンスコードとレスポンス内容を出力
+          echo "レスポンスコード: $RESPONSE_CODE"
           cat response.json | jq '.'
 
           if [ "$RESPONSE_CODE" -ne 200 ]; then
-            echo "Failed to get a valid response from ChatGPT API"
+            echo "ChatGPT API から有効なレスポンスを取得できませんでした。"
             exit 1
           fi
