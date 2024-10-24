@@ -31,7 +31,17 @@ jobs:
           git fetch --all
 
           # Extract the code that was pushed and format it
-          PR_CODE=$(git diff origin/main...HEAD)  # 差分の範囲を指定
+          PR_CODE=$(git diff origin/main...HEAD)
+
+          # Debugging: Check if code diff is correctly obtained
+          echo "Code diff:"
+          echo "$PR_CODE"
+
+          # Check if PR_CODE is empty or not
+          if [ -z "$PR_CODE" ]; then
+            echo "No code changes detected."
+            exit 0
+          fi
 
           # Create the request payload with Japanese message
           REQUEST_PAYLOAD=$(cat <<EOF
@@ -45,12 +55,21 @@ jobs:
           EOF
           )
 
-          # Send the request to ChatGPT API
-          RESPONSE=$(curl -s -X POST https://api.openai.com/v1/chat/completions \
+          # Debugging: Check the request payload
+          echo "Request payload:"
+          echo "$REQUEST_PAYLOAD"
+
+          # Send the request to ChatGPT API and capture response
+          RESPONSE_CODE=$(curl -s -o response.json -w "%{http_code}" -X POST https://api.openai.com/v1/chat/completions \
             -H "Content-Type: application/json" \
             -H "Authorization: Bearer $OPENAI_API_KEY" \
             -d "$REQUEST_PAYLOAD")
 
-          # Parse and output the response in Japanese
-          echo "ChatGPTのレビュー結果:"
-          echo "$RESPONSE" | jq '.choices[0].message.content'
+          # Output the response code and content
+          echo "Response code: $RESPONSE_CODE"
+          cat response.json | jq '.'
+
+          if [ "$RESPONSE_CODE" -ne 200 ]; then
+            echo "Failed to get a valid response from ChatGPT API"
+            exit 1
+          fi
