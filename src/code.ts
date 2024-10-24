@@ -73,7 +73,7 @@ const fetchBooks = (): void => {
 
             if (bookData.totalItems > 0 && bookData.items && bookData.items.length > 0) {
                 const volumeInfo = bookData.items[0].volumeInfo;
-                const title: string = volumeInfo?.title || "タイトルなし";
+                const title: string = volumeInfo?.title || "タイトルなし!";
                 const categories: string = volumeInfo.categories?.join(", ") || "ジャンル情報なし";
 
                 // スプレッドシートに書籍データをセット
