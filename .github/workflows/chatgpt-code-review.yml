@@ -3,7 +3,7 @@ name: ChatGPT Code Review on Push
 on:
   push:
     branches:
-      - main # 'main' ブランチにプッシュされた時のみトリガーされます
+      - main  # 'main' ブランチにプッシュされた時のみトリガーされます
 
 jobs:
   review:
@@ -13,12 +13,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
         with:
-          fetch-depth: 2 # 2つ以上のコミット履歴を取得
+          fetch-depth: 0  # 完全な履歴を取得
 
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: "16"
+          node-version: '16'
 
       - name: Send code to ChatGPT API
         env:
@@ -29,20 +29,20 @@ jobs:
 
           # Fetch full history in case it's not available
           git fetch --all
-
+          
           # Extract the code that was pushed and format it
-          PR_CODE=$(git diff origin/main...HEAD)
-
+          PR_CODE=$(git diff HEAD^ HEAD)  # 最新のコミット差分を取得
+          
           # Debugging: Check if code diff is correctly obtained
           echo "Code diff:"
           echo "$PR_CODE"
-
+          
           # Check if PR_CODE is empty or not
           if [ -z "$PR_CODE" ]; then
             echo "No code changes detected."
             exit 0
           fi
-
+          
           # Create the request payload with Japanese message
           REQUEST_PAYLOAD=$(cat <<EOF
           {
@@ -58,7 +58,7 @@ jobs:
           # Debugging: Check the request payload
           echo "Request payload:"
           echo "$REQUEST_PAYLOAD"
-
+          
           # Send the request to ChatGPT API and capture response
           RESPONSE_CODE=$(curl -s -o response.json -w "%{http_code}" -X POST https://api.openai.com/v1/chat/completions \
             -H "Content-Type: application/json" \
