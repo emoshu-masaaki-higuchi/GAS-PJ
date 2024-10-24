@@ -3,7 +3,7 @@ name: ChatGPT Code Review on Push
 on:
   push:
     branches:
-      - main
+      - main # 'main' ブランチにプッシュされた時のみトリガーされます
 
 jobs:
   review:
@@ -13,12 +13,12 @@ jobs:
       - name: コードをチェックアウト
         uses: actions/checkout@v3
         with:
-          fetch-depth: 0  # コミット履歴を完全に取得
+          fetch-depth: 0 # コミット履歴を完全に取得
 
       - name: Node.js のセットアップ
         uses: actions/setup-node@v3
         with:
-          node-version: '16'
+          node-version: "16"
 
       - name: ChatGPT API にコードを送信
         env:
@@ -29,25 +29,25 @@ jobs:
 
           # 全履歴を取得
           git fetch --all
-          
+
           # プッシュされたコードの差分を取得
           PR_CODE=$(git diff HEAD^ HEAD)
-          
+
           # 差分が正しく取得されたか確認
           echo "コードの差分:"
           echo "$PR_CODE"
-          
+
           # 差分が空でないかを確認
           if [ -z "$PR_CODE" ]; then
             echo "コードの変更が検出されませんでした。"
             exit 0
           fi
-          
+
           # JSONペイロードをシンプルに構築
           REQUEST_PAYLOAD=$(jq -n \
             --arg code "$PR_CODE" \
             '{
-              model: "gpt-4",
+              model: "gpt-4",  # モデル名を gpt-4 に設定
               messages: [
                 {role: "system", content: "あなたはプロフェッショナルなコードレビュアーです。"},
                 {role: "user", content: "次のコードをレビューしてください:\n\n\($code)"}
@@ -58,7 +58,7 @@ jobs:
           # デバッグ: ペイロードを確認
           echo "リクエストペイロード:"
           echo "$REQUEST_PAYLOAD" | jq '.'
-          
+
           # ChatGPT API にリクエストを送信
           RESPONSE_CODE=$(curl -s -o response.json -w "%{http_code}" -X POST https://api.openai.com/v1/chat/completions \
             -H "Content-Type: application/json" \
