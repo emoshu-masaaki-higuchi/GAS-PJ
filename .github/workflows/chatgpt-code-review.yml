@@ -1,0 +1,52 @@
+# .github/workflows/chatgpt-code-review.yml
+name: ChatGPT Code Review on Push
+
+on:
+  push:
+    branches:
+      - main  # 'main' ブランチにプッシュされた時のみトリガーされます
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+
+      - name: Send code to ChatGPT API
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          # Install dependencies
+          npm install axios
+
+          # Extract the code that was pushed and format it
+          PR_CODE=$(git diff HEAD^ HEAD)  # 最新のコミットの差分を取得
+          
+          # Create the request payload with Japanese message
+          REQUEST_PAYLOAD=$(cat <<EOF
+          {
+            "model": "gpt-4",
+            "messages": [
+              {"role": "system", "content": "あなたはプロフェッショナルなコードレビュアーです。"},
+              {"role": "user", "content": "次のコードをレビューしてください:\n\n$PR_CODE"}
+            ]
+          }
+          EOF
+          )
+
+          # Send the request to ChatGPT API
+          RESPONSE=$(curl -s -X POST https://api.openai.com/v1/chat/completions \
+            -H "Content-Type: application/json" \
+            -H "Authorization: Bearer $OPENAI_API_KEY" \
+            -d "$REQUEST_PAYLOAD")
+
+          # Parse and output the response in Japanese
+          echo "ChatGPTのレビュー結果:"
+          echo "$RESPONSE" | jq '.choices[0].message.content'
